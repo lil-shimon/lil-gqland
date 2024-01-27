@@ -80,11 +80,11 @@ sqlite3 ${DBFILE_NAME} "
 PRAGMA foreign_keys = ON;
 
 INSERT INTO users(id, name) VALUES\
-	('U_1', 'lil-shimon')
+	('U_2', 'lil-shimon')
 ;
 
 INSERT INTO repositories(id, owner, name) VALUES\
-	('REPO_1', 'U_1', 'repo1')
+	('REPO_2', 'U_2', 'repo2')
 ;
 
 INSERT INTO issues(id, url, title, closed, number, author, repository) VALUES\
