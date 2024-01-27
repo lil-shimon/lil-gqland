@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS repositories(\
 	id TEXT PRIMARY KEY NOT NULL,\
 	owner TEXT NOT NULL,\
 	name TEXT NOT NULL,\
-	created_at TIMESTAMP NOT NULL DEFAULT (DATETIME('now','localtime')),\
 	FOREIGN KEY (owner) REFERENCES users(id)\
 );
 
@@ -77,7 +76,7 @@ sqlite3 ${DBFILE_NAME} "
 PRAGMA foreign_keys = ON;
 
 INSERT INTO users(id, name) VALUES\
-	('U_1', 'hsaki')
+	('U_1', 'lil-shimon')
 ;
 
 INSERT INTO repositories(id, owner, name) VALUES\
@@ -95,7 +94,7 @@ INSERT INTO projects(id, title, url, owner) VALUES\
 ;
 
 INSERT INTO pullrequests(id, base_ref_name, closed, head_ref_name, url, number, repository) VALUES\
-	('PR_1', 'main', 1, 'feature/kinou1', 'http://example.com/repo1/pr/1', 1, 'REPO_1'),\
-	('PR_2', 'main', 0, 'feature/kinou2', 'http://example.com/repo1/pr/2', 2, 'REPO_1')\
+	('PR_1', 'main', 1, 'feature/issue1', 'http://example.com/repo1/pr/1', 1, 'REPO_1'),\
+	('PR_2', 'main', 0, 'feature/issue2', 'http://example.com/repo1/pr/2', 2, 'REPO_1')\
 ;
 "
