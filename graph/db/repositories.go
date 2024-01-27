@@ -23,51 +23,44 @@ import (
 
 // Repository is an object representing the database table.
 type Repository struct {
-	ID        string `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Owner     string `boil:"owner" json:"owner" toml:"owner" yaml:"owner"`
-	Name      string `boil:"name" json:"name" toml:"name" yaml:"name"`
-	CreatedAt string `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	ID    string `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Owner string `boil:"owner" json:"owner" toml:"owner" yaml:"owner"`
+	Name  string `boil:"name" json:"name" toml:"name" yaml:"name"`
 
 	R *repositoryR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L repositoryL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var RepositoryColumns = struct {
-	ID        string
-	Owner     string
-	Name      string
-	CreatedAt string
+	ID    string
+	Owner string
+	Name  string
 }{
-	ID:        "id",
-	Owner:     "owner",
-	Name:      "name",
-	CreatedAt: "created_at",
+	ID:    "id",
+	Owner: "owner",
+	Name:  "name",
 }
 
 var RepositoryTableColumns = struct {
-	ID        string
-	Owner     string
-	Name      string
-	CreatedAt string
+	ID    string
+	Owner string
+	Name  string
 }{
-	ID:        "repositories.id",
-	Owner:     "repositories.owner",
-	Name:      "repositories.name",
-	CreatedAt: "repositories.created_at",
+	ID:    "repositories.id",
+	Owner: "repositories.owner",
+	Name:  "repositories.name",
 }
 
 // Generated where
 
 var RepositoryWhere = struct {
-	ID        whereHelperstring
-	Owner     whereHelperstring
-	Name      whereHelperstring
-	CreatedAt whereHelperstring
+	ID    whereHelperstring
+	Owner whereHelperstring
+	Name  whereHelperstring
 }{
-	ID:        whereHelperstring{field: "\"repositories\".\"id\""},
-	Owner:     whereHelperstring{field: "\"repositories\".\"owner\""},
-	Name:      whereHelperstring{field: "\"repositories\".\"name\""},
-	CreatedAt: whereHelperstring{field: "\"repositories\".\"created_at\""},
+	ID:    whereHelperstring{field: "\"repositories\".\"id\""},
+	Owner: whereHelperstring{field: "\"repositories\".\"owner\""},
+	Name:  whereHelperstring{field: "\"repositories\".\"name\""},
 }
 
 // RepositoryRels is where relationship names are stored.
@@ -118,9 +111,9 @@ func (r *repositoryR) GetPullrequests() PullrequestSlice {
 type repositoryL struct{}
 
 var (
-	repositoryAllColumns            = []string{"id", "owner", "name", "created_at"}
+	repositoryAllColumns            = []string{"id", "owner", "name"}
 	repositoryColumnsWithoutDefault = []string{"id", "owner", "name"}
-	repositoryColumnsWithDefault    = []string{"created_at"}
+	repositoryColumnsWithDefault    = []string{}
 	repositoryPrimaryKeyColumns     = []string{"id"}
 	repositoryGeneratedColumns      = []string{}
 )
@@ -1017,13 +1010,6 @@ func (o *Repository) Insert(ctx context.Context, exec boil.ContextExecutor, colu
 	}
 
 	var err error
-	if !boil.TimestampsAreSkipped(ctx) {
-		currTime := time.Now().In(boil.GetLocation())
-
-		if queries.MustTime(o.CreatedAt).IsZero() {
-			queries.SetScanner(&o.CreatedAt, currTime)
-		}
-	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -1228,13 +1214,6 @@ func (o RepositorySlice) UpdateAll(ctx context.Context, exec boil.ContextExecuto
 func (o *Repository) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
 	if o == nil {
 		return errors.New("db: no repositories provided for upsert")
-	}
-	if !boil.TimestampsAreSkipped(ctx) {
-		currTime := time.Now().In(boil.GetLocation())
-
-		if queries.MustTime(o.CreatedAt).IsZero() {
-			queries.SetScanner(&o.CreatedAt, currTime)
-		}
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
