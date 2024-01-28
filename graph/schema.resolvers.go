@@ -6,7 +6,9 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/lil-shimon/lil-gqland/graph/model"
 	"github.com/lil-shimon/lil-gqland/internal"
@@ -33,12 +35,31 @@ func (r *queryResolver) User(ctx context.Context, name string) (*model.User, err
 
 // Node is the resolver for the node field.
 func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error) {
-	panic(fmt.Errorf("not implemented: Node - node"))
+	nElems := strings.SplitN(id, "_", 2)
+	nType, _ := nElems[0], nElems[1]
+
+	switch nType {
+	case "U":
+		return r.Srv.GetUserByID(ctx, id)
+	case "REPO":
+		return r.Srv.GetRepositoryByID(ctx, id)
+	case "ISSUE":
+		return r.Srv.GetIssueByID(ctx, id)
+	default:
+		return nil, errors.New("invalid id")
+	}
 }
 
 // Owner is the resolver for the owner field.
 func (r *repositoryResolver) Owner(ctx context.Context, obj *model.Repository) (*model.User, error) {
-	return r.Srv.GetUserByID(ctx, obj.Owner.ID)
+	thunk := r.Loaders.UserLoader.Load(ctx, obj.Owner.ID)
+
+	user, err := thunk()
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 // Issue is the resolver for the issue field.
@@ -48,7 +69,7 @@ func (r *repositoryResolver) Issue(ctx context.Context, obj *model.Repository, n
 
 // Issues is the resolver for the issues field.
 func (r *repositoryResolver) Issues(ctx context.Context, obj *model.Repository, after *string, before *string, first *int, last *int) (*model.IssueConnection, error) {
-	panic(fmt.Errorf("not implemented: Issues - issues"))
+	return r.Srv.ListIssueInRepository(ctx, obj.ID, after, before, first, last)
 }
 
 // PullRequest is the resolver for the pullRequest field.
