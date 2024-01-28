@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/lil-shimon/lil-gqland/graph"
 	"github.com/lil-shimon/lil-gqland/graph/services"
@@ -41,6 +42,7 @@ func main() {
 		Srv:     service,
 		Loaders: graph.NewLoaders(service),
 	}}))
+	srv.Use(extension.FixedComplexityLimit(10))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)
