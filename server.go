@@ -13,6 +13,7 @@ import (
 	"github.com/lil-shimon/lil-gqland/graph/services"
 	"github.com/lil-shimon/lil-gqland/internal"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 const (
@@ -32,10 +33,13 @@ func main() {
 	}
 	defer db.Close()
 
+	boil.DebugMode = true
+
 	service := services.New(db)
 
 	srv := handler.NewDefaultServer(internal.NewExecutableSchema(internal.Config{Resolvers: &graph.Resolver{
-		Srv: service,
+		Srv:     service,
+		Loaders: graph.NewLoaders(service),
 	}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))

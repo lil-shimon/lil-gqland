@@ -8,4 +8,5 @@ import "github.com/lil-shimon/lil-gqland/graph/services"
 
 type Resolver struct {
 	Srv services.Services
+	*Loaders
 }
