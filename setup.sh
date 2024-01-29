@@ -72,12 +72,23 @@ CREATE TABLE IF NOT EXISTS projectcards(\
 	FOREIGN KEY (pullrequest) REFERENCES pullrequests(id),\
 	CHECK (issue IS NOT NULL OR pullrequest IS NOT NULL)\
 );
+
+CREATE TABLE IF NOT EXISTS brands(\
+	id TEXT PRIMARY KEY NOT NULL,\
+  name TEXT NOT NULL,\
+  created_at DATETIME NOT NULL DEFAULT (DATETIME('now','localtime')),\
+  updated_at DATETIME NOT NULL DEFAULT (DATETIME('now','localtime'))\
+);
 "
 
 # Insert initial data
 echo "inserting initial data..."
 sqlite3 ${DBFILE_NAME} "
 PRAGMA foreign_keys = ON;
+
+INSERT INTO brands(id, name) VALUES\
+	('1', 'test-brand-1')
+;
 
 INSERT INTO users(id, name) VALUES\
 	('U_2', 'lil-shimon')
