@@ -840,7 +840,7 @@ func testProjectsSelect(t *testing.T) {
 }
 
 var (
-	projectDBTypes = map[string]string{`ID`: `TEXT`, `Title`: `TEXT`, `URL`: `TEXT`, `Owner`: `TEXT`}
+	projectDBTypes = map[string]string{`ID`: `TEXT`, `Title`: `TEXT`, `URL`: `TEXT`, `Number`: `INTEGER`, `Owner`: `TEXT`}
 	_              = bytes.MinRead
 )
 
