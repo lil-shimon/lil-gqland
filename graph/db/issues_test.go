@@ -822,6 +822,67 @@ func testIssueToManyRemoveOpProjectcards(t *testing.T) {
 	}
 }
 
+func testIssueToOneUserUsingAuthorUser(t *testing.T) {
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var local Issue
+	var foreign User
+
+	seed := randomize.NewSeed()
+	if err := randomize.Struct(seed, &local, issueDBTypes, false, issueColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize Issue struct: %s", err)
+	}
+	if err := randomize.Struct(seed, &foreign, userDBTypes, false, userColumnsWithDefault...); err != nil {
+		t.Errorf("Unable to randomize User struct: %s", err)
+	}
+
+	if err := foreign.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	local.Author = foreign.ID
+	if err := local.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	check, err := local.AuthorUser().One(ctx, tx)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if check.ID != foreign.ID {
+		t.Errorf("want: %v, got %v", foreign.ID, check.ID)
+	}
+
+	ranAfterSelectHook := false
+	AddUserHook(boil.AfterSelectHook, func(ctx context.Context, e boil.ContextExecutor, o *User) error {
+		ranAfterSelectHook = true
+		return nil
+	})
+
+	slice := IssueSlice{&local}
+	if err = local.L.LoadAuthorUser(ctx, tx, false, (*[]*Issue)(&slice), nil); err != nil {
+		t.Fatal(err)
+	}
+	if local.R.AuthorUser == nil {
+		t.Error("struct should have been eager loaded")
+	}
+
+	local.R.AuthorUser = nil
+	if err = local.L.LoadAuthorUser(ctx, tx, true, &local, nil); err != nil {
+		t.Fatal(err)
+	}
+	if local.R.AuthorUser == nil {
+		t.Error("struct should have been eager loaded")
+	}
+
+	if !ranAfterSelectHook {
+		t.Error("failed to run AfterSelect hook for relationship")
+	}
+}
+
 func testIssueToOneRepositoryUsingIssueRepository(t *testing.T) {
 	ctx := context.Background()
 	tx := MustTx(boil.BeginTx(ctx, nil))
@@ -883,6 +944,63 @@ func testIssueToOneRepositoryUsingIssueRepository(t *testing.T) {
 	}
 }
 
+func testIssueToOneSetOpUserUsingAuthorUser(t *testing.T) {
+	var err error
+
+	ctx := context.Background()
+	tx := MustTx(boil.BeginTx(ctx, nil))
+	defer func() { _ = tx.Rollback() }()
+
+	var a Issue
+	var b, c User
+
+	seed := randomize.NewSeed()
+	if err = randomize.Struct(seed, &a, issueDBTypes, false, strmangle.SetComplement(issuePrimaryKeyColumns, issueColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &b, userDBTypes, false, strmangle.SetComplement(userPrimaryKeyColumns, userColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+	if err = randomize.Struct(seed, &c, userDBTypes, false, strmangle.SetComplement(userPrimaryKeyColumns, userColumnsWithoutDefault)...); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := a.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+	if err = b.Insert(ctx, tx, boil.Infer()); err != nil {
+		t.Fatal(err)
+	}
+
+	for i, x := range []*User{&b, &c} {
+		err = a.SetAuthorUser(ctx, tx, i != 0, x)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if a.R.AuthorUser != x {
+			t.Error("relationship struct not set to correct value")
+		}
+
+		if x.R.AuthorIssues[0] != &a {
+			t.Error("failed to append to foreign relationship struct")
+		}
+		if a.Author != x.ID {
+			t.Error("foreign key was wrong value", a.Author)
+		}
+
+		zero := reflect.Zero(reflect.TypeOf(a.Author))
+		reflect.Indirect(reflect.ValueOf(&a.Author)).Set(zero)
+
+		if err = a.Reload(ctx, tx); err != nil {
+			t.Fatal("failed to reload", err)
+		}
+
+		if a.Author != x.ID {
+			t.Error("foreign key was wrong value", a.Author, x.ID)
+		}
+	}
+}
 func testIssueToOneSetOpRepositoryUsingIssueRepository(t *testing.T) {
 	var err error
 
@@ -1015,7 +1133,7 @@ func testIssuesSelect(t *testing.T) {
 }
 
 var (
-	issueDBTypes = map[string]string{`ID`: `TEXT`, `URL`: `TEXT`, `Title`: `TEXT`, `Closed`: `INTEGER`, `Number`: `INTEGER`, `Repository`: `TEXT`}
+	issueDBTypes = map[string]string{`ID`: `TEXT`, `URL`: `TEXT`, `Title`: `TEXT`, `Closed`: `INTEGER`, `Number`: `INTEGER`, `Author`: `TEXT`, `Repository`: `TEXT`}
 	_            = bytes.MinRead
 )
 

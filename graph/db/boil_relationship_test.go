@@ -8,6 +8,7 @@ import "testing"
 // TestToOne tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToOne(t *testing.T) {
+	t.Run("IssueToUserUsingAuthorUser", testIssueToOneUserUsingAuthorUser)
 	t.Run("IssueToRepositoryUsingIssueRepository", testIssueToOneRepositoryUsingIssueRepository)
 	t.Run("ProjectcardToPullrequestUsingProjectcardPullrequest", testProjectcardToOnePullrequestUsingProjectcardPullrequest)
 	t.Run("ProjectcardToIssueUsingProjectcardIssue", testProjectcardToOneIssueUsingProjectcardIssue)
@@ -29,6 +30,7 @@ func TestToMany(t *testing.T) {
 	t.Run("PullrequestToProjectcards", testPullrequestToManyProjectcards)
 	t.Run("RepositoryToIssues", testRepositoryToManyIssues)
 	t.Run("RepositoryToPullrequests", testRepositoryToManyPullrequests)
+	t.Run("UserToAuthorIssues", testUserToManyAuthorIssues)
 	t.Run("UserToOwnerProjects", testUserToManyOwnerProjects)
 	t.Run("UserToOwnerRepositories", testUserToManyOwnerRepositories)
 }
@@ -36,6 +38,7 @@ func TestToMany(t *testing.T) {
 // TestToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToOneSet(t *testing.T) {
+	t.Run("IssueToUserUsingAuthorIssues", testIssueToOneSetOpUserUsingAuthorUser)
 	t.Run("IssueToRepositoryUsingIssues", testIssueToOneSetOpRepositoryUsingIssueRepository)
 	t.Run("ProjectcardToPullrequestUsingProjectcards", testProjectcardToOneSetOpPullrequestUsingProjectcardPullrequest)
 	t.Run("ProjectcardToIssueUsingProjectcards", testProjectcardToOneSetOpIssueUsingProjectcardIssue)
@@ -68,6 +71,7 @@ func TestToManyAdd(t *testing.T) {
 	t.Run("PullrequestToProjectcards", testPullrequestToManyAddOpProjectcards)
 	t.Run("RepositoryToIssues", testRepositoryToManyAddOpIssues)
 	t.Run("RepositoryToPullrequests", testRepositoryToManyAddOpPullrequests)
+	t.Run("UserToAuthorIssues", testUserToManyAddOpAuthorIssues)
 	t.Run("UserToOwnerProjects", testUserToManyAddOpOwnerProjects)
 	t.Run("UserToOwnerRepositories", testUserToManyAddOpOwnerRepositories)
 }

@@ -12,6 +12,7 @@ import "testing"
 // It does NOT run each operation group in parallel.
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
+	t.Run("Brands", testBrands)
 	t.Run("Issues", testIssues)
 	t.Run("Projectcards", testProjectcards)
 	t.Run("Projects", testProjects)
@@ -21,6 +22,7 @@ func TestParent(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	t.Run("Brands", testBrandsDelete)
 	t.Run("Issues", testIssuesDelete)
 	t.Run("Projectcards", testProjectcardsDelete)
 	t.Run("Projects", testProjectsDelete)
@@ -30,6 +32,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestQueryDeleteAll(t *testing.T) {
+	t.Run("Brands", testBrandsQueryDeleteAll)
 	t.Run("Issues", testIssuesQueryDeleteAll)
 	t.Run("Projectcards", testProjectcardsQueryDeleteAll)
 	t.Run("Projects", testProjectsQueryDeleteAll)
@@ -39,6 +42,7 @@ func TestQueryDeleteAll(t *testing.T) {
 }
 
 func TestSliceDeleteAll(t *testing.T) {
+	t.Run("Brands", testBrandsSliceDeleteAll)
 	t.Run("Issues", testIssuesSliceDeleteAll)
 	t.Run("Projectcards", testProjectcardsSliceDeleteAll)
 	t.Run("Projects", testProjectsSliceDeleteAll)
@@ -48,6 +52,7 @@ func TestSliceDeleteAll(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
+	t.Run("Brands", testBrandsExists)
 	t.Run("Issues", testIssuesExists)
 	t.Run("Projectcards", testProjectcardsExists)
 	t.Run("Projects", testProjectsExists)
@@ -57,6 +62,7 @@ func TestExists(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
+	t.Run("Brands", testBrandsFind)
 	t.Run("Issues", testIssuesFind)
 	t.Run("Projectcards", testProjectcardsFind)
 	t.Run("Projects", testProjectsFind)
@@ -66,6 +72,7 @@ func TestFind(t *testing.T) {
 }
 
 func TestBind(t *testing.T) {
+	t.Run("Brands", testBrandsBind)
 	t.Run("Issues", testIssuesBind)
 	t.Run("Projectcards", testProjectcardsBind)
 	t.Run("Projects", testProjectsBind)
@@ -75,6 +82,7 @@ func TestBind(t *testing.T) {
 }
 
 func TestOne(t *testing.T) {
+	t.Run("Brands", testBrandsOne)
 	t.Run("Issues", testIssuesOne)
 	t.Run("Projectcards", testProjectcardsOne)
 	t.Run("Projects", testProjectsOne)
@@ -84,6 +92,7 @@ func TestOne(t *testing.T) {
 }
 
 func TestAll(t *testing.T) {
+	t.Run("Brands", testBrandsAll)
 	t.Run("Issues", testIssuesAll)
 	t.Run("Projectcards", testProjectcardsAll)
 	t.Run("Projects", testProjectsAll)
@@ -93,6 +102,7 @@ func TestAll(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
+	t.Run("Brands", testBrandsCount)
 	t.Run("Issues", testIssuesCount)
 	t.Run("Projectcards", testProjectcardsCount)
 	t.Run("Projects", testProjectsCount)
@@ -102,6 +112,7 @@ func TestCount(t *testing.T) {
 }
 
 func TestHooks(t *testing.T) {
+	t.Run("Brands", testBrandsHooks)
 	t.Run("Issues", testIssuesHooks)
 	t.Run("Projectcards", testProjectcardsHooks)
 	t.Run("Projects", testProjectsHooks)
@@ -111,6 +122,8 @@ func TestHooks(t *testing.T) {
 }
 
 func TestInsert(t *testing.T) {
+	t.Run("Brands", testBrandsInsert)
+	t.Run("Brands", testBrandsInsertWhitelist)
 	t.Run("Issues", testIssuesInsert)
 	t.Run("Issues", testIssuesInsertWhitelist)
 	t.Run("Projectcards", testProjectcardsInsert)
@@ -126,6 +139,7 @@ func TestInsert(t *testing.T) {
 }
 
 func TestReload(t *testing.T) {
+	t.Run("Brands", testBrandsReload)
 	t.Run("Issues", testIssuesReload)
 	t.Run("Projectcards", testProjectcardsReload)
 	t.Run("Projects", testProjectsReload)
@@ -135,6 +149,7 @@ func TestReload(t *testing.T) {
 }
 
 func TestReloadAll(t *testing.T) {
+	t.Run("Brands", testBrandsReloadAll)
 	t.Run("Issues", testIssuesReloadAll)
 	t.Run("Projectcards", testProjectcardsReloadAll)
 	t.Run("Projects", testProjectsReloadAll)
@@ -144,6 +159,7 @@ func TestReloadAll(t *testing.T) {
 }
 
 func TestSelect(t *testing.T) {
+	t.Run("Brands", testBrandsSelect)
 	t.Run("Issues", testIssuesSelect)
 	t.Run("Projectcards", testProjectcardsSelect)
 	t.Run("Projects", testProjectsSelect)
@@ -153,6 +169,7 @@ func TestSelect(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	t.Run("Brands", testBrandsUpdate)
 	t.Run("Issues", testIssuesUpdate)
 	t.Run("Projectcards", testProjectcardsUpdate)
 	t.Run("Projects", testProjectsUpdate)
@@ -162,6 +179,7 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestSliceUpdateAll(t *testing.T) {
+	t.Run("Brands", testBrandsSliceUpdateAll)
 	t.Run("Issues", testIssuesSliceUpdateAll)
 	t.Run("Projectcards", testProjectcardsSliceUpdateAll)
 	t.Run("Projects", testProjectsSliceUpdateAll)

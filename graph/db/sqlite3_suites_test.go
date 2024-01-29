@@ -6,6 +6,8 @@ package db
 import "testing"
 
 func TestUpsert(t *testing.T) {
+	t.Run("Brands", testBrandsUpsert)
+
 	t.Run("Issues", testIssuesUpsert)
 
 	t.Run("Projectcards", testProjectcardsUpsert)
