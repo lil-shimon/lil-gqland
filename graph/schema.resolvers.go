@@ -52,7 +52,7 @@ func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error)
 
 // Brand is the resolver for the brand field.
 func (r *queryResolver) Brand(ctx context.Context, id string) (*model.Brand, error) {
-	panic(fmt.Errorf("not implemented: Brand - brand"))
+	return r.Srv.GetBrandById(ctx, id)
 }
 
 // Owner is the resolver for the owner field.
