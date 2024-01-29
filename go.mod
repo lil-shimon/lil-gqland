@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.43
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/friendsofgo/errors v0.9.2
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 	github.com/graph-gophers/dataloader/v7 v7.1.0
 	github.com/mattn/go-sqlite3 v1.14.20
 	github.com/pkg/errors v0.9.1
