@@ -6,13 +6,11 @@ require (
 	github.com/99designs/gqlgen v0.17.43
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/friendsofgo/errors v0.9.2
-	github.com/golang/mock v1.6.0
 	github.com/google/go-cmp v0.5.9
 	github.com/graph-gophers/dataloader/v7 v7.1.0
 	github.com/mattn/go-sqlite3 v1.14.20
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.18.2
-	github.com/tenntenn/golden v0.5.1
 	github.com/vektah/gqlparser/v2 v2.5.11
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/randomize v0.0.1
@@ -32,8 +30,6 @@ require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/josharian/mapfs v0.0.0-20210615234106-095c008854e6 // indirect
-	github.com/josharian/txtarfs v0.0.0-20210615234325-77aca6df5bca // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
