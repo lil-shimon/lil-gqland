@@ -50,6 +50,11 @@ func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error)
 	}
 }
 
+// Brand is the resolver for the brand field.
+func (r *queryResolver) Brand(ctx context.Context, id string) (*model.Brand, error) {
+	panic(fmt.Errorf("not implemented: Brand - brand"))
+}
+
 // Owner is the resolver for the owner field.
 func (r *repositoryResolver) Owner(ctx context.Context, obj *model.Repository) (*model.User, error) {
 	thunk := r.Loaders.UserLoader.Load(ctx, obj.Owner.ID)

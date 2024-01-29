@@ -25,6 +25,13 @@ type AddProjectV2ItemByIDPayload struct {
 	Item *ProjectV2Item `json:"item,omitempty"`
 }
 
+type Brand struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
 type Issue struct {
 	ID           string                   `json:"id"`
 	URL          url.URL                  `json:"url"`

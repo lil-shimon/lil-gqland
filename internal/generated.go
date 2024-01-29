@@ -54,6 +54,13 @@ type ComplexityRoot struct {
 		Item func(childComplexity int) int
 	}
 
+	Brand struct {
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Name      func(childComplexity int) int
+		UpdatedAt func(childComplexity int) int
+	}
+
 	Issue struct {
 		Author       func(childComplexity int) int
 		Closed       func(childComplexity int) int
@@ -151,6 +158,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		Brand      func(childComplexity int, id string) int
 		Node       func(childComplexity int, id string) int
 		Repository func(childComplexity int, name string, owner string) int
 		User       func(childComplexity int, name string) int
@@ -182,6 +190,7 @@ type QueryResolver interface {
 	Repository(ctx context.Context, name string, owner string) (*model.Repository, error)
 	User(ctx context.Context, name string) (*model.User, error)
 	Node(ctx context.Context, id string) (model.Node, error)
+	Brand(ctx context.Context, id string) (*model.Brand, error)
 }
 type RepositoryResolver interface {
 	Owner(ctx context.Context, obj *model.Repository) (*model.User, error)
@@ -217,6 +226,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AddProjectV2ItemByIdPayload.Item(childComplexity), true
+
+	case "Brand.createdAt":
+		if e.complexity.Brand.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Brand.CreatedAt(childComplexity), true
+
+	case "Brand.id":
+		if e.complexity.Brand.ID == nil {
+			break
+		}
+
+		return e.complexity.Brand.ID(childComplexity), true
+
+	case "Brand.name":
+		if e.complexity.Brand.Name == nil {
+			break
+		}
+
+		return e.complexity.Brand.Name(childComplexity), true
+
+	case "Brand.updatedAt":
+		if e.complexity.Brand.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.Brand.UpdatedAt(childComplexity), true
 
 	case "Issue.author":
 		if e.complexity.Issue.Author == nil {
@@ -615,6 +652,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PullRequestEdge.Node(childComplexity), true
+
+	case "Query.brand":
+		if e.complexity.Query.Brand == nil {
+			break
+		}
+
+		args, err := ec.field_Query_brand_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Brand(childComplexity, args["id"].(string)), true
 
 	case "Query.node":
 		if e.complexity.Query.Node == nil {
@@ -1044,6 +1093,17 @@ type Query {
     id: ID!
   ): Node
 
+  brand(
+    id: ID!
+  ): Brand
+
+}
+
+type Brand {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input AddProjectV2ItemByIdInput {
@@ -1221,6 +1281,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_brand_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -1531,6 +1606,182 @@ func (ec *executionContext) fieldContext_AddProjectV2ItemByIdPayload_item(ctx co
 				return ec.fieldContext_ProjectV2Item_content(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ProjectV2Item", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Brand_id(ctx context.Context, field graphql.CollectedField, obj *model.Brand) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Brand_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Brand_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Brand",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Brand_name(ctx context.Context, field graphql.CollectedField, obj *model.Brand) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Brand_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Brand_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Brand",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Brand_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Brand) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Brand_createdAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Brand_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Brand",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Brand_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Brand) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Brand_updatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNDateTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Brand_updatedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Brand",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type DateTime does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4376,6 +4627,68 @@ func (ec *executionContext) fieldContext_Query_node(ctx context.Context, field g
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_brand(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_brand(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Brand(rctx, fc.Args["id"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Brand)
+	fc.Result = res
+	return ec.marshalOBrand2ᚖgithubᚗcomᚋlilᚑshimonᚋlilᚑgqlandᚋgraphᚋmodelᚐBrand(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_brand(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Brand_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Brand_name(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Brand_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Brand_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Brand", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_brand_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -7105,6 +7418,60 @@ func (ec *executionContext) _AddProjectV2ItemByIdPayload(ctx context.Context, se
 	return out
 }
 
+var brandImplementors = []string{"Brand"}
+
+func (ec *executionContext) _Brand(ctx context.Context, sel ast.SelectionSet, obj *model.Brand) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, brandImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Brand")
+		case "id":
+			out.Values[i] = ec._Brand_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "name":
+			out.Values[i] = ec._Brand_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._Brand_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updatedAt":
+			out.Values[i] = ec._Brand_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var issueImplementors = []string{"Issue", "Node", "ProjectV2ItemContent"}
 
 func (ec *executionContext) _Issue(ctx context.Context, sel ast.SelectionSet, obj *model.Issue) graphql.Marshaler {
@@ -7880,6 +8247,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_node(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "brand":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_brand(ctx, field)
 				return res
 			}
 
@@ -8991,6 +9377,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOBrand2ᚖgithubᚗcomᚋlilᚑshimonᚋlilᚑgqlandᚋgraphᚋmodelᚐBrand(ctx context.Context, sel ast.SelectionSet, v *model.Brand) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Brand(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

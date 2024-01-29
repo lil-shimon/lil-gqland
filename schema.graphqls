@@ -170,6 +170,17 @@ type Query {
     id: ID!
   ): Node
 
+  brand(
+    id: ID!
+  ): Brand
+
+}
+
+type Brand {
+  id: ID!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input AddProjectV2ItemByIdInput {
