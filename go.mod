@@ -14,7 +14,7 @@ require (
 	github.com/vektah/gqlparser/v2 v2.5.11
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/randomize v0.0.1
-	github.com/volatiletech/sqlboiler/v4 v4.16.1
+	github.com/volatiletech/sqlboiler/v4 v4.16.2
 	github.com/volatiletech/strmangle v0.0.6
 	golang.org/x/net v0.20.0
 	modernc.org/sqlite v1.28.0
